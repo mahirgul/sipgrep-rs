@@ -39,7 +39,7 @@ sudo apt-get install -y libpcap-dev build-essential
 ### Installation & Build
 
 ```bash
-git clone https://github.com/mahir/sipgrep-rs.git
+git clone https://github.com/mahirgul/sipgrep-rs.git
 cd sipgrep-rs
 cargo build --release
 ```
