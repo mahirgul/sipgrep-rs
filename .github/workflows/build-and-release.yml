@@ -1,0 +1,54 @@
+name: Build & Release sipgrep-rs
+
+on:
+  push:
+    branches: [ "main" ]
+    tags: [ "v*" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-linux:
+    name: Build Linux (x86_64-unknown-linux-gnu)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install libpcap-dev
+        run: sudo apt-get update && sudo apt-get install -y libpcap-dev build-essential
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Run Tests
+        run: cargo test --verbose
+
+      - name: Build Release Binary
+        run: cargo build --release
+
+      - name: Package Linux Binary (.tar.gz)
+        run: |
+          ARTIFACT_NAME="sipgrep-rs-x86_64-unknown-linux-gnu"
+          mkdir -p "$ARTIFACT_NAME"
+          cp target/release/sipgrep-rs "$ARTIFACT_NAME/"
+          cp README.md LICENSE "$ARTIFACT_NAME/"
+          tar -czvf "${ARTIFACT_NAME}.tar.gz" -C "$ARTIFACT_NAME" .
+          echo "ARTIFACT_PATH=${ARTIFACT_NAME}.tar.gz" >> $GITHUB_ENV
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sipgrep-rs-linux
+          path: ${{ env.ARTIFACT_PATH }}
+
+      - name: Create GitHub Release on Tag
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ env.ARTIFACT_PATH }}
+          generate_release_notes: true
