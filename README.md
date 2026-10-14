@@ -3,6 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Rust](https://img.shields.io/badge/rust-stable-brightgreen.svg)](https://www.rust-lang.org/)
 [![RFC 3261](https://img.shields.io/badge/SIP-RFC%203261-orange.svg)](https://datatracker.ietf.org/doc/html/rfc3261)
+[![Website](https://img.shields.io/badge/Live-Demo%20%26%20Docs-cyan.svg)](docs/index.html)
 
 A fast, memory-safe, modern terminal-based **SIP (Session Initiation Protocol)** packet sniffer, call flow ladder visualizer, and protocol analyzer written in 100% Rust.
 
