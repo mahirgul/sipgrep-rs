@@ -2,10 +2,11 @@
 name = "sipgrep-rs"
 version = "0.1.0"
 edition = "2024"
-authors = ["sipgrep-rs Contributors"]
+authors = ["Mahir Gül <mahirgul@gmail.com>"]
 description = "A modern terminal-based SIP packet capture, call flow ladder diagram, and protocol analyzer in Rust"
 license = "MIT"
 readme = "README.md"
+homepage = "https://mahirgul.github.io/sipgrep-rs/"
 repository = "https://github.com/mahirgul/sipgrep-rs"
 keywords = ["sip", "voip", "packet-capture", "tui", "rfc3261"]
 categories = ["command-line-utilities", "network-programming"]
