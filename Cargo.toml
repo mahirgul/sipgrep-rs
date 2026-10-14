@@ -1,0 +1,23 @@
+[package]
+name = "sipgrep-rs"
+version = "0.1.0"
+edition = "2024"
+authors = ["sipgrep-rs Contributors"]
+description = "A modern terminal-based SIP packet capture, call flow ladder diagram, and protocol analyzer in Rust"
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/mahir/sipgrep-rs"
+keywords = ["sip", "voip", "packet-capture", "tui", "rfc3261"]
+categories = ["command-line-utilities", "network-programming"]
+
+[dependencies]
+pcap = "2.2"
+etherparse = "0.17"
+ratatui = "0.29"
+crossterm = "0.28"
+clap = { version = "4.5", features = ["derive"] }
+chrono = "0.4"
+regex = "1.11"
+anyhow = "1.0"
+crossbeam-channel = "0.5"
+ctrlc = "3.4"
