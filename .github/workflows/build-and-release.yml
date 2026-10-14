@@ -52,3 +52,49 @@ jobs:
         with:
           files: ${{ env.ARTIFACT_PATH }}
           generate_release_notes: true
+
+  build-windows:
+    name: Build Windows (x86_64-pc-windows-msvc)
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download & Setup Npcap SDK
+        shell: pwsh
+        run: |
+          Invoke-WebRequest -Uri https://npcap.com/dist/npcap-sdk-1.13.zip -OutFile npcap-sdk.zip
+          Expand-Archive -Path npcap-sdk.zip -DestinationPath npcap-sdk
+          $sdkPath = "$PWD\npcap-sdk\Lib\x64"
+          echo "LIB=$sdkPath;$env:LIB" >> $env:GITHUB_ENV
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - name: Build Release Binary
+        run: cargo build --release --target x86_64-pc-windows-msvc
+
+      - name: Package Windows Binary (.zip)
+        shell: pwsh
+        run: |
+          $artifactName = "sipgrep-rs-x86_64-windows"
+          New-Item -ItemType Directory -Path $artifactName
+          Copy-Item "target/x86_64-pc-windows-msvc/release/sipgrep-rs.exe" -Destination $artifactName/
+          Copy-Item "README.md", "LICENSE" -Destination $artifactName/
+          Compress-Archive -Path "$artifactName/*" -DestinationPath "$artifactName.zip"
+          echo "ARTIFACT_PATH=$artifactName.zip" >> $env:GITHUB_ENV
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sipgrep-rs-windows
+          path: ${{ env.ARTIFACT_PATH }}
+
+      - name: Create GitHub Release on Tag
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ env.ARTIFACT_PATH }}
+          generate_release_notes: true
